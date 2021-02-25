@@ -32,3 +32,39 @@ Java 9以降のモジュールシステムでは、モジュールの種類を�
  - ほかのモジュールからモジュール名を指定して明示的に依存関係を定義することは不可能
  - 代わりに、無名モジュール内のすべてのパッケージは自動的にすべてexportsされたものとして扱われる
  - モジュールグラフに読み込まれたすべてのモジュールをrequiresしているものとして扱われる
+
+## コンパイル / 実行方法
+### コンパイル
+```
+$ javac -d <クラスファイルの出力先> <コンパイル対象ファイル>
+
+（例）
+$ javac -d mods/com.kohsaito src/com.kohsaito/module-info.java src/com.kohsaito/com/kohsaito/World.java
+
+$ javac --module-path mods -d mods/com.greetings/ src/com.greetings/module-info.java src/com.greetings/com/greetings/Main.java
+```
+
+複数モジュールを同時にコンパイルすることも可能
+```
+$ javac -d mods --module-source-path src $(find src -name "*.java")
+```
+
+### 実行
+```
+$ java --module-path <モジュールの検索先> -m <モジュール名>/<クラス名>
+
+（例）
+$ java --module-path mods -m com.greetings/com.greetings.Main
+
+My name is : kohei
+```
+
+## jarファイル(モジュラjarファイル)にパッケージング
+モジュールをjarファイルとしてまとめておくと、デプロイ時に便利。
+```
+$ mkdir mlib
+
+$ jar --create --file=mlib/com.kohsaito@1.0.jar --module-version=1.0 -C mods/com.kohsaito .
+
+$ jar --create --file=mlib/com.greetings.jar --main-class=com.greetings.Main -C mods/com.greetings .
+```
