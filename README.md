@@ -63,10 +63,20 @@ My name is : kohei
 
 ## jarファイル(モジュラjarファイル)にパッケージング
 モジュールをjarファイルとしてまとめておくと、デプロイ時に便利。
+※モジュラjarファイル：ルートディレクトリにモジュール記述子module-info.classを持つJARファイル。モジュール記述子は、モジュール宣言のバイナリ形式である。
+
 ```
 $ mkdir mlib
 
 $ jar --create --file=mlib/com.kohsaito@1.0.jar --module-version=1.0 -C mods/com.kohsaito .
 
 $ jar --create --file=mlib/com.greetings.jar --main-class=com.greetings.Main -C mods/com.greetings .
+```
+
+## モジュラjarファイルにパッケージされているモジュール一覧を出力
+```
+$ jar --describe-module --file=mlib/com.kohsaito\@1.0.jar 
+com.kohsaito@1.0 jar:file:///Users/kohei/work/module/greetings/mlib/com.kohsaito@1.0.jar/!module-info.class
+exports com.kohsaito
+requires java.base mandated
 ```
